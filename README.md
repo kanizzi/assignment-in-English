@@ -10,7 +10,7 @@
 <font  size=2 >**线性回归是机器学习中最基本的问题之一，通过全面了解线性回归的本质以及实现，我们可以收获关于机器学习中的一些基本思路和方法。**</font>
 
 ## 1:首先我们以sklearn自带的波士顿房价数据集为对象， 载入数据：
-
+```python
   import pandas as pd
   import numpy as np
   import matplotlib.pyplot as plt
@@ -18,4 +18,4 @@
   X,y = load_boston(return_X_y=True)
   #X是特征集，y是预测标签
   X_df = pd.DataFrame(X) #转换为dataframe可在Spyder中查看具体数据
-
+```
