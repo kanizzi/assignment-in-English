@@ -19,3 +19,30 @@
   #X是特征集，y是预测标签
   X_df = pd.DataFrame(X) #转换为dataframe可在Spyder中查看具体数据
 ```
+
+## 2:考虑到数据集各属性或者说特征之间量纲差异大，对原始据进行标准化：
+```python
+  X_df = X_df.apply(lambda x: (x - np.min(x)) / (np.max(x) - np.min(x))) 
+  #这里对每一列特征使用max-min标准化方法，将数值统一到[0,1]区间
+```
+
+## 3:划分训练集和测试集，用来评估算法性能：
+```python
+from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X_df, y, random_state=111)
+#这里设置了随机种子，确保能够产生一致的训练和测试数据的划分
+#也可以自己写函数进行训练集和测试集的划分，示例如下：
+def trainTestSplit(X,test_size):
+    X_num=X.shape[0]
+    train_index=range(X_num)
+    test_index=[]
+    test_num=int(X_num*test_size)
+    for i in range(test_num):
+        randomIndex=int(np.random.uniform(0,len(train_index)))
+        test_index.append(train_index[randomIndex])
+        del train_index[randomIndex]
+    train=X.ix[train_index,] 
+    test=X.ix[test_index,]
+    return train,test
+#这里的X是原始数据集或者待划分的数据集，test_size表示测试集所占比例
+```
