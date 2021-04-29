@@ -161,7 +161,21 @@ plt.plot(y_pre3,label='Pre_LRC')
 plt.legend()
 ```
 >预测结果对比
+
 ![图1](https://github.com/kanizzi/assignment-in-English/blob/main/20201026113057283.png)
 
+------
 >预测误差分布
+
 ![图2](https://github.com/kanizzi/assignment-in-English/blob/main/20201026113143957.png)
+
+
+#### 6:小结：
+
+*a) 批量梯度下降能够实现最小化均方误差损失函数，但是需要迭代，因此计算消耗较大，尤其是到样本数较大时；*
+
+*b) 可以通过矩阵求解线性回归的最佳权重参数，但是我们因为引入了矩阵求逆，可以在计算逆值之前进行检查；如果不可逆，则需要引入正则化方法来处理，后续会有相应的内容来说明。*
+
+|梯度下降|
+|-------|
+|线性回归|
