@@ -135,4 +135,4 @@ def myMGD(features,target,num_steps,batch_size,learning_rate,add_intercept=False
 <font  size=2 >*线性回归是机器学习中最基本的问题之一，通过全面了解线性回归的本质以及实现，我们可以收获关于机器学习中的一些基本思路和方法。*</font>
 
 ## 5:对于线性回归问题，除了梯度下降算法能够去不断拟合特征权重，我们还可以通过矩阵的方式求解原问题的闭式结果或者说解析解。直接给出推导结果：
-(https://github.com/kanizzi/assignment-in-English/edit/main/20200928110441987.jpg)
+(https://github.com/kanizzi/assignment-in-English/blob/main/20200928110441987.png)
