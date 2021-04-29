@@ -1,15 +1,9 @@
-# Python 机器学习_线性回归
+## Python 机器学习_线性回归
 [参考资料](https://blog.csdn.net/kepengs/article/details/84812666?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&spm=1001.2101.3001.4242)
-
-<font face="黑体" color=green size=5>我是黑体，绿色，尺寸为5</font>
-
-<font size=1>字体大小size=1</font>
-<font size=3>字体大小size=3</font>
-<font size=5>字体大小size=5</font>
 
 <font  size=2 >**线性回归是机器学习中最基本的问题之一，通过全面了解线性回归的本质以及实现，我们可以收获关于机器学习中的一些基本思路和方法。**</font>
 
-## 1:首先我们以sklearn自带的波士顿房价数据集为对象， 载入数据：
+#### 1:首先我们以sklearn自带的波士顿房价数据集为对象， 载入数据：
 ```python
   import pandas as pd
   import numpy as np
@@ -20,13 +14,13 @@
   X_df = pd.DataFrame(X) #转换为dataframe可在Spyder中查看具体数据
 ```
 
-## 2:考虑到数据集各属性或者说特征之间量纲差异大，对原始据进行标准化：
+#### 2:考虑到数据集各属性或者说特征之间量纲差异大，对原始据进行标准化：
 ```python
   X_df = X_df.apply(lambda x: (x - np.min(x)) / (np.max(x) - np.min(x))) 
   #这里对每一列特征使用max-min标准化方法，将数值统一到[0,1]区间
 ```
 
-## 3:划分训练集和测试集，用来评估算法性能：
+#### 3:划分训练集和测试集，用来评估算法性能：
 ```python
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X_df, y, random_state=111)
@@ -46,7 +40,7 @@ def trainTestSplit(X,test_size):
     return train,test
 #这里的X是原始数据集或者待划分的数据集，test_size表示测试集所占比例
 ```
-## 4:建立线性回归模型。首先明确线性回归就是在最小化均方误差的约束下，求解不同特征对于预测目标变量的贡献或者说权重。我们通过不同的梯度下降方法来实现权重参数的求解：
+#### 4:建立线性回归模型。首先明确线性回归就是在最小化均方误差的约束下，求解不同特征对于预测目标变量的贡献或者说权重。我们通过不同的梯度下降方法来实现权重参数的求解：
 ```python
 #定义批量梯度下降函数求取特征权重
 def myBGD(features,target,num_steps,learning_rate,add_intercept=False):
@@ -134,5 +128,40 @@ def myMGD(features,target,num_steps,batch_size,learning_rate,add_intercept=False
 ```
 <font  size=2 >*线性回归是机器学习中最基本的问题之一，通过全面了解线性回归的本质以及实现，我们可以收获关于机器学习中的一些基本思路和方法。*</font>
 
-## 5:对于线性回归问题，除了梯度下降算法能够去不断拟合特征权重，我们还可以通过矩阵的方式求解原问题的闭式结果或者说解析解。直接给出推导结果：
-![图片alt](https://github.com/kanizzi/assignment-in-English/blob/main/20200928110441987.png)
+#### 5:对于线性回归问题，除了梯度下降算法能够去不断拟合特征权重，我们还可以通过矩阵的方式求解原问题的闭式结果或者说解析解。直接给出推导结果：
+![公式](https://github.com/kanizzi/assignment-in-English/blob/main/20200928110441987.png)
+```python
+ #线性回归的闭式求解
+intercept = np.ones((X_train.shape[0], 1)) #设置截距量
+X_train1 = pd.DataFrame(np.hstack((intercept, X_train))) #计算X的增广矩阵
+m1 = np.dot(X_train1.values.T,X_train1.values) #计算对称矩阵的逆
+m2 = np.dot(np.linalg.inv(m1),X_train1.values.T) 
+weg_lrc = np.dot(m2,y_train) #得到特征权重
+```
+#### 6:结果对比：
+```python
+def preout(X_test,weight):
+    data_inc = np.hstack((np.ones((X_test.shape[0], 1)),X_test))
+    y_pre = np.dot(data_inc,weight)
+    return y_pre
+#根据训练获得求解得到的权重计算预测值，注意设置截距量这一步
+weg_bgd = myBGD(X_train,y_train,num_steps = 50000,learning_rate = 1e-3,add_intercept=True) #设置一个较小的学习率和较多的迭代次数，确保收敛到全局最优附近
+weg_sgd = mySGD(X_train,y_train,num_steps = 20000,learning_rate = 1e-3,add_intercept=True)
+weg_mgd = myMGD(X_train,y_train,num_steps = 20000,batch_size=5,learning_rate = 1e-3,add_intercept=True)
+y_pre0 = preout(X_test,weg_bgd)    
+y_pre1 = preout(X_test,weg_sgd)
+y_pre2 = preout(X_test,weg_mgd)
+#将结果可视化
+plt.figure(figsize=(15,10))
+plt.plot(y_test,label='True')
+plt.plot(y_pre0,label='Pre_myBGD')
+plt.plot(y_pre1,label='Pre_mySGD')
+plt.plot(y_pre2,label='Pre_myMGD')
+plt.plot(y_pre3,label='Pre_LRC')
+plt.legend()
+```
+>预测结果对比
+![图1](https://github.com/kanizzi/assignment-in-English/blob/main/20201026113057283.png)
+
+>预测误差分布
+![图2](https://github.com/kanizzi/assignment-in-English/blob/main/20201026113143957.png)
